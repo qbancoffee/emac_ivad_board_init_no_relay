@@ -9,6 +9,10 @@ can now be removed and replaced with almost anything that can output a VGA signa
 These commands were captured with a logic analyzer during the booting process and 
 implemented here.
 
-This program waits for a button press and turns on/off relays that turn the
-CRT on and off.
+This program sends the init code 5 seconds after being powered and also monitors
+pin 3 for button presses.
+
+All code to control external relays was removed.
+
+
 
