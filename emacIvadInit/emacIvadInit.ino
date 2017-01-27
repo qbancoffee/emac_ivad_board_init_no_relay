@@ -5,15 +5,12 @@
 #include <Wire.h>
 
 //define relay and power button pins
-int relay1OnPin = 7;
-int relay1OffPin = 6;
-int relay2OnPin = 5;
-int relay2OffPin = 4;
+
 int powerButtonPin = 3;
 
 
 //define state variables
-int externalCircuitState = LOW;
+int isEmacOn = LOW;
 int buttonState = LOW;
 
 //counters
@@ -23,15 +20,14 @@ int buttonPressedTime = 0;
 void setup() {
 
   //define pin direction
-  pinMode(relay1OnPin, OUTPUT);
-  pinMode(relay1OffPin, OUTPUT);
-  pinMode(relay2OnPin, OUTPUT);
-  pinMode(relay2OffPin, OUTPUT);
+
   pinMode(powerButtonPin, INPUT);
 
   Wire.begin(); // join i2c bus (address optional for master)
-// turn off raspberry pi, audio board and CRT
-  externalCircuitOff();
+  delay(5000);
+  initIvadBoard();
+
+
 }
 
 byte x = 0;
@@ -53,23 +49,23 @@ void loop() {
   }
   delay(1000);
 
- //turn everything off if button is pressed for 5 seconds
-  if(buttonPressedTime >=5 && externalCircuitState == HIGH){
-    externalCircuitOff();
+  //turn everything off if button is pressed for 5 seconds
+  if (buttonPressedTime >= 5 && isEmacOn == HIGH) {
     buttonPressedTime = 0;
-   
-    }
+    isEmacOn=LOW;
+
+  }
 
   //turn everything on if button is pressed for 1 second
-  if(buttonPressedTime >=2 && externalCircuitState == LOW){
-    externalCircuitOn();
+  if (buttonPressedTime >= 2 && isEmacOn == LOW) {
     delay(5000);
     initIvadBoard();
     buttonPressedTime = 0;
-   
-    }   
+    isEmacOn=HIGH;
 
- 
+  }
+
+
 
 
 }
@@ -118,7 +114,7 @@ void initIvadBoard() {
       readFromIvad(83, 10);
 
     }//end for
-   
+
     writeToIvad(70, 0x01 , 0xAE);
     writeToIvad(70, 0x02 , 0xAA);
     writeToIvad(70, 0x03 , 0xB6);
@@ -149,47 +145,6 @@ void initIvadBoard() {
 }
 
 
-void relay1On() {
-  digitalWrite(relay1OnPin, HIGH);
-  delay(200);
-  digitalWrite(relay1OnPin, LOW);
-
-}
-
-void relay1Off() {
-  digitalWrite(relay1OffPin, HIGH);
-  delay(200);
-  digitalWrite(relay1OffPin, LOW);
-
-}
-
-void relay2On() {
-  digitalWrite(relay2OnPin, HIGH);
-  delay(200);
-  digitalWrite(relay2OnPin, LOW);
-
-}
-
-void relay2Off() {
-  digitalWrite(relay2OffPin, HIGH);
-  delay(200);
-  digitalWrite(relay2OffPin, LOW);
-
-}
-
-
-void externalCircuitOn() {
-  relay1On();
-  relay2On();
-  externalCircuitState = HIGH;
-
-}
-void externalCircuitOff() {
-  relay1Off();
-  relay2Off();
-  externalCircuitState = LOW;
-
-}
 
 
 
