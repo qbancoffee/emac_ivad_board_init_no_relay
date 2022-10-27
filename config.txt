@@ -54,7 +54,7 @@ hdmi_cvt=1152 864 80 1
 dtparam=audio=on
 
 # Enable the loading of edid.dat file from boot directory:
-hdmi_edid_file=1
+#hdmi_edid_file=1
 
 gpu_mem_256=128
 gpu_mem_512=256
